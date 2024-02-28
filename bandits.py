@@ -16,7 +16,14 @@ import numpy as np
 
 class Bandit:
     def selectAction(self, a):
-        """Load in the file for extracting text."""
+        """
+        Returns the associated reward for a given action
+
+        Parameters
+        ----------
+        a : str
+            Some indicator to select which action to take
+        """
         pass
 
 

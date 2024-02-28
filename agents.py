@@ -46,7 +46,7 @@ class EpsilonGreedyAgent:
     -------
     chooseAction()
         Uses Epsilon-Greedy logic to select an action and realize it's associated reward.
-        Passes this information into the updateRewards class.
+        Passes this information into the (private) updateRewards function.
     """
 
     def __init__(self, bandit: Bandit, epsilon: float = 0.1) -> None:
@@ -65,6 +65,10 @@ class EpsilonGreedyAgent:
             raise ValueError("Invalid Epsilon, must be within (0,1)")
         self.bandit = bandit
         self.epsilon = epsilon
+        # TODO: See if there is a better way to do this, maybe in one function. I attempted this, but it lead to very loose, inaccurate floating point problems with the arrays
+        # However, for now, this provides desired behavior without issue.
+        self.reward_estimates = np.array([])
+        self.reward_select_counts = np.array([])
         self.reward_estimates.resize(bandit.k)
         self.reward_select_counts.resize(bandit.k)
 
@@ -90,22 +94,22 @@ class EpsilonGreedyAgent:
         self.reward_select_counts[selected_action] += 1
 
     def chooseAction(self) -> None:
-        
+        """
+        Public method which uses Epsilon-Greedy logic to select an action and realize it's associated reward.
+        Passes this information into the updateRewards function.
+        """
         k = self.bandit.k
         selected_action = 0
         # Random value [0,1) to determine if random action will be used rather than greedy
         epsilon_check = np.random.random()
 
-        print_substr = "GREEDILY"
-
         if(self.epsilon > epsilon_check): # Random action
             selected_action = np.random.randint(0,k)
-            print_substr = "EPSILON-RANDOMLY"
         else: # Greedy action
             selected_action = self.reward_estimates.argmax()
 
         selected_reward = self.bandit.selectAction(selected_action) # Reward of selected action through bandit
-        self.updateRewards(selected_action, selected_reward)
+        self.__updateRewards(selected_action, selected_reward)
     
     #TODO: Potentially add additional function to call "choose action" many (int input n) times?
     #TODO: Potentially add additional function to reset estimated values so that agent could be "reused" for different problems
