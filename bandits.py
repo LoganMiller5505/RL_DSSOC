@@ -1,3 +1,17 @@
+"""
+Bandits Source File
+
+Collection of various Bandit types useful for the k-armed bandit problem.
+
+Requires `numpy` to be installed.
+
+Currently contains implementations for:
+    - Stationary Bandit
+
+TODO: Add implementations for:
+    - Nonstationary Bandit
+"""
+
 import numpy as np
 
 class Bandit:
@@ -8,7 +22,7 @@ class Bandit:
 
 class StationaryBandit(Bandit):
     """
-    Python implementation of the stationary k-bandit concept
+    Python implementation of the stationary k-bandit concept. Extends the "Bandit" interface
 
     ...
 
@@ -38,8 +52,7 @@ class StationaryBandit(Bandit):
             - variance = 1
     """
 
-    # Constructor
-    def __init__(self, k: int = 3, min: int = 0, max: int = 10) -> None:
+    def __init__(self, k: int = 3, min: int = 0, max: int = 10, variance: int = 1) -> None:
         """
         Parameters
         ----------
@@ -52,12 +65,14 @@ class StationaryBandit(Bandit):
         variance : int
             normal distribution variance value (default 1)
         """
+        #TODO: Add "ValueError" checks for this constructor
+        
         self.k = k
         self.min = min
         self.max = max
-        self.actions = np.random.randint(min, max, k) # Rewards always between 0 and 100. Can easily make customizable as well, if desired
+        self.variance = variance
+        self.actions = np.random.randint(min, max, k)
 
-    # Function
     def selectAction(self, a: int) -> float:
         """
         Returns the associated reward for a given action
@@ -76,6 +91,6 @@ class StationaryBandit(Bandit):
         if a not in range(0,self.k):
             raise ValueError("Invalid Action, out of range")
         else:
-            return np.random.normal(self.actions[a],1) # Return normal distribution with mean equalling randomized reward value and spread equalling 1
+            return np.random.normal(self.actions[a],self.variance)
         
 #class NonstationaryBandit(Bandit):
