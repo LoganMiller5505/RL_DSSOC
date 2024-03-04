@@ -31,8 +31,8 @@ random_agent = RandomAgent(curr_bandit)
 # Define runtime & output constants
 print("How many times would you like the agent to be able to choose an action? ")
 n = int(input())
-print_interval = 10
 
-eps_greedy_agent.runSeqeuence()
-print(f"Epsilon Greedy Total Points: {eps_greedy_agent.total_points}")
-print("-----------------------------------------------------")
+greedy_agent.runSeqeuence(n, 100)
+opt_greedy_agent.runSeqeuence(n,100)
+eps_greedy_agent.runSeqeuence(n, 100)
+random_agent.runSeqeuence(n)
