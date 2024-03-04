@@ -33,28 +33,6 @@ print("How many times would you like the agent to be able to choose an action? "
 n = int(input())
 print_interval = 10
 
-for i in range(0,n):
-    greedy_agent.chooseAction()
-    opt_greedy_agent.chooseAction()
-    eps_greedy_agent.chooseAction()
-    random_agent.chooseAction()
-    if i % print_interval == 0:
-        print(f"Greedy Reward Estimate at Step #{i}: {greedy_agent.reward_estimates}")
-        print(f"Optimistic Greedy Reward Estimate at Step #{i}: {opt_greedy_agent.reward_estimates}")
-        print(f"Epsilon Greedy Reward Estimate at Step #{i}: {eps_greedy_agent.reward_estimates}")
-        print("-----------------------------------------------")
-
-print(f"Final Greedy Reward Estimate: {greedy_agent.reward_estimates}")
-print(f"Final Optimistic Greedy Reward Estimate: {opt_greedy_agent.reward_estimates}")
-print(f"Final Epsilon Greedy Reward Estimate: {eps_greedy_agent.reward_estimates}")
-print(f"Actual Action Reward Values: {curr_bandit.actions}")
-print("-----------------------------------------------")
-print(f"Greedy Total Points: {greedy_agent.total_points}")
-print(f"Optimistic Greedy Total Points: {opt_greedy_agent.total_points}")
+eps_greedy_agent.runSeqeuence()
 print(f"Epsilon Greedy Total Points: {eps_greedy_agent.total_points}")
-print(f"Random Total Points: {random_agent.total_points}")
-print("-----------------------------------------------")
-print(f"Greedy Avg Points/Step: {greedy_agent.total_points/n}")
-print(f"Optimistic Greedy Avg Points/Step: {opt_greedy_agent.total_points/n}")
-print(f"Epsilon Greedy Avg Points/Step: {eps_greedy_agent.total_points/n}")
-print(f"Random Avg Points/Step: {random_agent.total_points/n}")
+print("-----------------------------------------------------")

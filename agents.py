@@ -41,11 +41,11 @@ class EpsilonGreedyAgent:
             - Epsilon of 0 = Greedy Model
             - Epsilon of 1 = Purely Random Model
         (default 0.1)
-    reward_estimates : np.array
+    __reward_estimates : np.array
         Estimated value of each action's reward based on prior experience, where:
             - index = action ID
             - value = estimated cooresponding reward
-    reward_select_counts : np.array
+    __reward_select_counts : np.array
         Array that keeps track of how many times each action has been selected, where:
             - index = action ID
             - value = num times action has been selected
@@ -55,6 +55,8 @@ class EpsilonGreedyAgent:
     chooseAction()
         Uses Epsilon-Greedy logic to select an action and realize its associated reward.
         Passes this information into the (private) updateRewards function.
+    runSequence(n = 1000, print_interval = 100)
+        Run the model input n amount of times, providing print statements to indicate how it is performing
     """
 
     total_points = 0
@@ -77,10 +79,10 @@ class EpsilonGreedyAgent:
         self.epsilon = epsilon
         # TODO: See if there is a better way to do this, maybe in one function. I attempted this, but it lead to very loose, inaccurate floating point problems with the arrays
         # However, for now, this provides desired behavior without issue.
-        self.reward_estimates = np.array([])
-        self.reward_select_counts = np.array([])
-        self.reward_estimates.resize(bandit.k)
-        self.reward_select_counts.resize(bandit.k)
+        self.__reward_estimates = np.array([])
+        self.__reward_select_counts = np.array([])
+        self.__reward_estimates.resize(bandit.k)
+        self.__reward_select_counts.resize(bandit.k)
 
     def __updateRewards(self, selected_action: int, selected_reward: float) -> None:
         """
@@ -95,13 +97,13 @@ class EpsilonGreedyAgent:
             Reward component of selected action ID/cooresponding reward pair
         """
         # Using derived formulas from RL textbook
-        q = self.reward_estimates[selected_action]
-        n = self.reward_select_counts[selected_action]
+        q = self.__reward_estimates[selected_action]
+        n = self.__reward_select_counts[selected_action]
         if(n==0): #Action has NOT been selected before
-            self.reward_estimates[selected_action] = selected_reward
+            self.__reward_estimates[selected_action] = selected_reward
         else:
-            self.reward_estimates[selected_action] = q + ( (1/n) * (selected_reward - q) )
-        self.reward_select_counts[selected_action] += 1
+            self.__reward_estimates[selected_action] = q + ( (1/n) * (selected_reward - q) )
+        self.__reward_select_counts[selected_action] += 1
 
     def chooseAction(self) -> None:
         """
@@ -116,13 +118,29 @@ class EpsilonGreedyAgent:
         if(self.epsilon > epsilon_check): # Random action
             selected_action = np.random.randint(0,k)
         else: # Greedy action
-            selected_action = self.reward_estimates.argmax()
+            selected_action = self.__reward_estimates.argmax()
 
         selected_reward = self.bandit.selectAction(selected_action) # Reward of selected action through bandit
         self.total_points += selected_reward
         self.__updateRewards(selected_action, selected_reward)
     
-    #TODO: Potentially add additional function to call "choose action" many (int input n) times?
+    def runSeqeuence(self, n: int = 1000, print_interval: int = 100) -> None:
+        """
+        Run the model input n amount of times, providing print statements to indicate how it is performing
+
+        Parameters
+        ----------
+        n : int
+            Number of times to call "chooseAction()" (dfault 1000)
+        print_interval : float
+            Interval between which to print current reward estimate (default 100)
+        """
+        for i in range(0,n):
+            self.chooseAction()
+            if i % print_interval == 0:
+                print(f"Epsilon Greedy Reward Estimate at Step #{i}: {self.__reward_estimates}")
+        print(f"Total Epsilon Greedy Points: {self.total_points}")
+
     #TODO: Potentially add additional function to reset estimated values so that agent could be "reused" for different problems
         #(could potentialy be used by above proposed function)
 
