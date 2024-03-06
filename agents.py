@@ -13,6 +13,8 @@ Currently contains implementations for:
 
 TODO: Add implementations for:
     - Constant step-size function
+
+TODO: Add a way to "update" which bandit a model is running on (resetting current predictions & changing necessary variables)
 """
 
 import numpy as np
@@ -62,6 +64,8 @@ class EpsilonGreedyAgent:
         Run the model input n amount of times, providing print statements to indicate how it is performing
     reset()
         Reset values associated with the agent's progress
+    changeBandit(bandit)
+        Changes bandit that the agent is running on
     """
 
     total_points = 0
@@ -155,6 +159,17 @@ class EpsilonGreedyAgent:
         self.__reward_estimates.fill(0)
         self.__reward_select_counts.fill(0)
 
+    def changeBandit(self, bandit: Bandit) -> None:
+        """
+        Updates the model information to run on the new input bandit
+
+        Parameters
+        ----------
+        bandit : Bandit
+            New bandit you want the agent to operate on
+        """
+        self.reset()
+        print("INCOMPLETE IMPLEMENTATION")
 
 
 
@@ -194,6 +209,8 @@ class OptimisticGreedyAgent:
         Run the model input n amount of times, providing print statements to indicate how it is performing
     reset()
         Reset values associated with the agent's progress
+    changeBandit(bandit)
+        Changes bandit that the agent is running on
     """
 
     total_points = 0
@@ -276,6 +293,17 @@ class OptimisticGreedyAgent:
         self.__reward_estimates.fill(float(self.__optimistic_value))
         self.__reward_select_counts.fill(0)
 
+    def changeBandit(self, bandit: Bandit) -> None:
+        """
+        Updates the model information to run on the new input bandit
+
+        Parameters
+        ----------
+        bandit : Bandit
+            New bandit you want the agent to operate on
+        """
+        self.reset()
+        print("INCOMPLETE IMPLEMENTATION")
 
 
 
@@ -315,6 +343,8 @@ class GreedyAgent:
         Run the model input n amount of times, providing print statements to indicate how it is performing
     reset()
         Reset values associated with the agent's progress
+    changeBandit(bandit)
+        Changes bandit that the agent is running on
     """
 
     total_points = 0
@@ -391,6 +421,18 @@ class GreedyAgent:
         self.total_points = 0
         self.__reward_estimates.fill(0)
         self.__reward_select_counts.fill(0)
+    
+    def changeBandit(self, bandit: Bandit) -> None:
+        """
+        Updates the model information to run on the new input bandit
+
+        Parameters
+        ----------
+        bandit : Bandit
+            New bandit you want the agent to operate on
+        """
+        self.reset()
+        print("INCOMPLETE IMPLEMENTATION")
 
 
 
@@ -422,6 +464,8 @@ class RandomAgent:
         Run the model input n amount of times, providing a final print statement to indicate how it performed
     reset()
         Reset values associated with the agent's progress
+    changeBandit(bandit)
+        Changes bandit that the agent is running on
     """
 
     total_points = 0
@@ -466,3 +510,15 @@ class RandomAgent:
         Reset values associated with the agent's progress
         """
         self.total_points = 0
+
+    def changeBandit(self, bandit: Bandit) -> None:
+        """
+        Updates the model information to run on the new input bandit
+
+        Parameters
+        ----------
+        bandit : Bandit
+            New bandit you want the agent to operate on
+        """
+        self.reset()
+        print("INCOMPLETE IMPLEMENTATION")
