@@ -10,6 +10,9 @@ Currently contains implementations for:
     - Greedy Agent
     - Optimistic Greedy Agent
     - Random Agent
+
+TODO: Add implementations for:
+    - Constant step-size function
 """
 
 import numpy as np
@@ -57,6 +60,8 @@ class EpsilonGreedyAgent:
         Passes this information into the (private) updateRewards function.
     runSequence(n = 1000, print_interval = 100)
         Run the model input n amount of times, providing print statements to indicate how it is performing
+    reset()
+        Reset values associated with the agent's progress
     """
 
     total_points = 0
@@ -142,8 +147,13 @@ class EpsilonGreedyAgent:
         print(f"Total Epsilon Greedy Points: {self.total_points}")
         print("-----------------------------------------------------")
 
-    #TODO: Potentially add additional function to reset estimated values so that agent could be "reused" for different problems
-        #(could potentialy be used by above function)
+    def reset(self) -> None:
+        """
+        Reset values associated with the agent's progress
+        """
+        self.total_points = 0
+        self.__reward_estimates.fill(0)
+        self.__reward_select_counts.fill(0)
 
 
 
@@ -182,6 +192,8 @@ class OptimisticGreedyAgent:
         Passes this information into the (private) updateRewards function.
     runSequence(n = 1000, print_interval = 100)
         Run the model input n amount of times, providing print statements to indicate how it is performing
+    reset()
+        Reset values associated with the agent's progress
     """
 
     total_points = 0
@@ -204,6 +216,7 @@ class OptimisticGreedyAgent:
         self.__reward_estimates.resize(bandit.k)
         self.__reward_select_counts.resize(bandit.k)
         self.__reward_estimates.fill(optimistic_val)
+        self.__optimistic_value = optimistic_val
 
     def __updateRewards(self, selected_action: int, selected_reward: float) -> None:
         """
@@ -255,8 +268,13 @@ class OptimisticGreedyAgent:
         print(f"Total Optimistic Greedy Points: {self.total_points}")
         print("-----------------------------------------------------")
 
-    #TODO: Potentially add additional function to reset estimated values so that agent could be "reused" for different problems
-        #(could potentialy be used by above function)
+    def reset(self) -> None:
+        """
+        Reset values associated with the agent's progress
+        """
+        self.total_points = 0
+        self.__reward_estimates.fill(float(self.__optimistic_value))
+        self.__reward_select_counts.fill(0)
 
 
 
@@ -295,6 +313,8 @@ class GreedyAgent:
         Passes this information into the (private) updateRewards function.
     runSequence(n = 1000, print_interval = 100)
         Run the model input n amount of times, providing print statements to indicate how it is performing
+    reset()
+        Reset values associated with the agent's progress
     """
 
     total_points = 0
@@ -364,8 +384,13 @@ class GreedyAgent:
         print(f"Total Greedy Points: {self.total_points}")
         print("-----------------------------------------------------")
 
-    #TODO: Potentially add additional function to reset estimated values so that agent could be "reused" for different problems
-        #(could potentialy be used by above function)
+    def reset(self) -> None:
+        """
+        Reset values associated with the agent's progress
+        """
+        self.total_points = 0
+        self.__reward_estimates.fill(0)
+        self.__reward_select_counts.fill(0)
 
 
 
@@ -395,6 +420,8 @@ class RandomAgent:
         Randomly select an action and realize its associated reward.
     runSequence(n = 1000)
         Run the model input n amount of times, providing a final print statement to indicate how it performed
+    reset()
+        Reset values associated with the agent's progress
     """
 
     total_points = 0
@@ -434,5 +461,8 @@ class RandomAgent:
         print(f"Total Random Points: {self.total_points}")
         print("-----------------------------------------------------")
     
-    #TODO: Potentially add additional function to reset total points so that agent could be "reused" for different problems
-        #(could potentialy be used by above function)
+    def reset(self) -> None:
+        """
+        Reset values associated with the agent's progress
+        """
+        self.total_points = 0

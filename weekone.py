@@ -32,7 +32,26 @@ random_agent = RandomAgent(curr_bandit)
 print("How many times would you like the agent to be able to choose an action? ")
 n = int(input())
 
-greedy_agent.runSeqeuence(n, 100)
-opt_greedy_agent.runSeqeuence(n,100)
-eps_greedy_agent.runSeqeuence(n, 100)
+print("-----------------------------------------------------")
+
+greedy_agent.runSeqeuence(n, 1000)
+opt_greedy_agent.runSeqeuence(n,1000)
+eps_greedy_agent.runSeqeuence(n, 1000)
 random_agent.runSeqeuence(n)
+
+print(f"\n\nTRUE ACTION VALUES: {curr_bandit.actions}\n\n")
+print("-----------------------------------------------------")
+
+# Test functionality of reset
+greedy_agent.reset()
+opt_greedy_agent.reset()
+eps_greedy_agent.reset()
+random_agent.reset()
+
+greedy_agent.runSeqeuence(n, 1000)
+opt_greedy_agent.runSeqeuence(n,1000)
+eps_greedy_agent.runSeqeuence(n, 1000)
+random_agent.runSeqeuence(n)
+
+print(f"\n\nTRUE ACTION VALUES: {curr_bandit.actions}\n\n")
+print("-----------------------------------------------------")
