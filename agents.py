@@ -13,6 +13,7 @@ Currently contains implementations for:
 
 TODO: Add implementations for:
     - Constant step-size function
+    - UCB Selection Agent
 
 TODO: Add a way to "update" which bandit a model is running on (resetting current predictions & changing necessary variables)
 """
@@ -60,7 +61,7 @@ class EpsilonGreedyAgent:
     chooseAction()
         Uses Epsilon-Greedy logic to select an action and realize its associated reward.
         Passes this information into the (private) updateRewards function.
-    runSequence(n = 1000, print_interval = 100)
+    runSequence(n = 1000, print_interval = None)
         Run the model input n amount of times, providing print statements to indicate how it is performing
     reset()
         Reset values associated with the agent's progress
@@ -133,21 +134,22 @@ class EpsilonGreedyAgent:
         self.total_points += selected_reward
         self.__updateRewards(selected_action, selected_reward)
     
-    def runSeqeuence(self, n: int = 1000, print_interval: int = 100) -> None:
+    def runSequence(self, n: int = 1000, print_interval: int = None) -> None:
         """
         Run the model input n amount of times, providing print statements to indicate how it is performing
 
         Parameters
         ----------
         n : int
-            Number of times to call "chooseAction()" (dfault 1000)
+            Number of times to call "chooseAction()" (default 1000)
         print_interval : float
-            Interval between which to print current reward estimate (default 100)
+            Interval between which to print current reward estimate (default None)
         """
         for i in range(1,n+1):
             self.chooseAction()
-            if i % print_interval == 0:
+            if print_interval != None and i % print_interval == 0:
                 print(f"Epsilon Greedy Reward Estimate at Step #{i}: {self.__reward_estimates}")
+        print(f"FINAL Epsilon Greedy Reward Estimate: {self.__reward_estimates}")
         print(f"Total Epsilon Greedy Points: {self.total_points}")
         print("-----------------------------------------------------")
 
@@ -169,7 +171,9 @@ class EpsilonGreedyAgent:
             New bandit you want the agent to operate on
         """
         self.reset()
-        print("INCOMPLETE IMPLEMENTATION")
+        self.bandit = bandit
+        self.__reward_estimates.resize(bandit.k)
+        self.__reward_select_counts.resize(bandit.k)
 
 
 
@@ -205,7 +209,7 @@ class OptimisticGreedyAgent:
     chooseAction()
         Uses Epsilon-Greedy logic to select an action and realize its associated reward.
         Passes this information into the (private) updateRewards function.
-    runSequence(n = 1000, print_interval = 100)
+    runSequence(n = 1000, print_interval = None)
         Run the model input n amount of times, providing print statements to indicate how it is performing
     reset()
         Reset values associated with the agent's progress
@@ -267,21 +271,22 @@ class OptimisticGreedyAgent:
         self.total_points += selected_reward
         self.__updateRewards(selected_action, selected_reward)
     
-    def runSeqeuence(self, n: int = 1000, print_interval: int = 100) -> None:
+    def runSequence(self, n: int = 1000, print_interval: int = None) -> None:
         """
         Run the model input n amount of times, providing print statements to indicate how it is performing
 
         Parameters
         ----------
         n : int
-            Number of times to call "chooseAction()" (dfault 1000)
+            Number of times to call "chooseAction()" (default 1000)
         print_interval : float
-            Interval between which to print current reward estimate (default 100)
+            Interval between which to print current reward estimate (default None)
         """
         for i in range(1,n+1):
             self.chooseAction()
-            if i % print_interval == 0:
+            if print_interval != None and i % print_interval == 0:
                 print(f"Optimistic Greedy Reward Estimate at Step #{i}: {self.__reward_estimates}")
+        print(f"FINAL Optimistic Greedy Reward Estimate: {self.__reward_estimates}")
         print(f"Total Optimistic Greedy Points: {self.total_points}")
         print("-----------------------------------------------------")
 
@@ -303,7 +308,10 @@ class OptimisticGreedyAgent:
             New bandit you want the agent to operate on
         """
         self.reset()
-        print("INCOMPLETE IMPLEMENTATION")
+        self.bandit = bandit
+        self.__reward_estimates.resize(bandit.k)
+        self.__reward_select_counts.resize(bandit.k)
+        self.__reward_estimates.fill(self.__optimistic_value)
 
 
 
@@ -339,7 +347,7 @@ class GreedyAgent:
     chooseAction()
         Uses Greedy logic to select an action and realize its associated reward.
         Passes this information into the (private) updateRewards function.
-    runSequence(n = 1000, print_interval = 100)
+    runSequence(n = 1000, print_interval = None)
         Run the model input n amount of times, providing print statements to indicate how it is performing
     reset()
         Reset values associated with the agent's progress
@@ -396,21 +404,22 @@ class GreedyAgent:
         self.total_points += selected_reward
         self.__updateRewards(selected_action, selected_reward)
     
-    def runSeqeuence(self, n: int = 1000, print_interval: int = 100) -> None:
+    def runSequence(self, n: int = 1000, print_interval: int = None) -> None:
         """
         Run the model input n amount of times, providing print statements to indicate how it is performing
 
         Parameters
         ----------
         n : int
-            Number of times to call "chooseAction()" (dfault 1000)
+            Number of times to call "chooseAction()" (default 1000)
         print_interval : float
-            Interval between which to print current reward estimate (default 100)
+            Interval between which to print current reward estimate (default None)
         """
         for i in range(1,n+1):
             self.chooseAction()
-            if i % print_interval == 0:
+            if print_interval != None and i % print_interval == 0:
                 print(f"Greedy Reward Estimate at Step #{i}: {self.__reward_estimates}")
+        print(f"FINAL Greedy Reward Estimate: {self.__reward_estimates}")
         print(f"Total Greedy Points: {self.total_points}")
         print("-----------------------------------------------------")
 
@@ -432,7 +441,9 @@ class GreedyAgent:
             New bandit you want the agent to operate on
         """
         self.reset()
-        print("INCOMPLETE IMPLEMENTATION")
+        self.bandit = bandit
+        self.__reward_estimates.resize(bandit.k)
+        self.__reward_select_counts.resize(bandit.k)
 
 
 
@@ -491,14 +502,14 @@ class RandomAgent:
         selected_reward = self.bandit.selectAction(selected_action) # Reward of selected action through bandit
         self.total_points += selected_reward
 
-    def runSeqeuence(self, n: int = 1000) -> None:
+    def runSequence(self, n: int = 1000) -> None:
         """
         Run the model input n amount of times, providing a final print statement to indicate how it performed
 
         Parameters
         ----------
         n : int
-            Number of times to call "chooseAction()" (dfault 1000)
+            Number of times to call "chooseAction()" (default 1000)
         """
         for i in range(1,n+1):
             self.chooseAction()
@@ -521,4 +532,4 @@ class RandomAgent:
             New bandit you want the agent to operate on
         """
         self.reset()
-        print("INCOMPLETE IMPLEMENTATION")
+        self.bandit = bandit
