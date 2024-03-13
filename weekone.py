@@ -4,6 +4,7 @@ from agents import EpsilonGreedyAgent
 from agents import GreedyAgent
 from agents import OptimisticGreedyAgent
 from agents import RandomAgent
+from agents import UpperConfidenceBoundAgent
 
 # TODO: Add futher user input, if desired
 
@@ -19,12 +20,15 @@ print("What would you like your epsilon value for the agent to be? (Decimal Form
 epsilon = float(input())
 optimistic_val = 20
 
+c = 1
+
 # Create bandit & agent objects
 curr_bandit = StationaryBandit(k, min, max, variance)
 
 greedy_agent = GreedyAgent(curr_bandit)
 opt_greedy_agent = OptimisticGreedyAgent(curr_bandit, optimistic_val)
 eps_greedy_agent = EpsilonGreedyAgent(curr_bandit, epsilon)
+ucb_agent = UpperConfidenceBoundAgent(curr_bandit, c)
 
 random_agent = RandomAgent(curr_bandit)
 
@@ -39,6 +43,7 @@ print("-----------------------------------------------------")
 greedy_agent.runSequence(n, print_frequency)
 opt_greedy_agent.runSequence(n,print_frequency)
 eps_greedy_agent.runSequence(n, print_frequency)
+ucb_agent.runSequence(n, print_frequency)
 random_agent.runSequence(n)
 
 print(f"\n\nTRUE ACTION VALUES: {curr_bandit.actions}\n\n")
@@ -48,11 +53,13 @@ print("-----------------------------------------------------")
 greedy_agent.reset()
 opt_greedy_agent.reset()
 eps_greedy_agent.reset()
+ucb_agent.reset()
 random_agent.reset()
 
 greedy_agent.runSequence(n)
 opt_greedy_agent.runSequence(n)
 eps_greedy_agent.runSequence(n)
+ucb_agent.runSequence(n)
 random_agent.runSequence(n)
 
 print(f"\n\nTRUE ACTION VALUES: {curr_bandit.actions}\n\n")
@@ -66,11 +73,13 @@ new_bandit = StationaryBandit(k+1, min, max, variance)
 greedy_agent.changeBandit(new_bandit)
 opt_greedy_agent.changeBandit(new_bandit)
 eps_greedy_agent.changeBandit(new_bandit)
+ucb_agent.changeBandit(new_bandit)
 random_agent.changeBandit(new_bandit)
 
 greedy_agent.runSequence(n)
 opt_greedy_agent.runSequence(n)
 eps_greedy_agent.runSequence(n)
+ucb_agent.runSequence(n)
 random_agent.runSequence(n)
 
 print(f"\n\nTRUE ACTION VALUES: {new_bandit.actions}\n\n")
@@ -80,11 +89,13 @@ print("-----------------------------------------------------")
 greedy_agent.reset()
 opt_greedy_agent.reset()
 eps_greedy_agent.reset()
+ucb_agent.reset()
 random_agent.reset()
 
 greedy_agent.runSequence(n)
 opt_greedy_agent.runSequence(n)
 eps_greedy_agent.runSequence(n)
+ucb_agent.runSequence(n)
 random_agent.runSequence(n)
 
 print(f"\n\nTRUE ACTION VALUES: {new_bandit.actions}\n\n")
