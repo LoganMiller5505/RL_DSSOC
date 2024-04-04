@@ -621,7 +621,7 @@ class UpperConfidenceBoundAgent:
 
     def chooseAction(self) -> None:
         """
-        Public method which uses Epsilon-Greedy logic to select an action and realize its associated reward.
+        Public method which uses UCB logic to select an action and realize its associated reward.
         Passes this information into the updateRewards function.
         """
 
