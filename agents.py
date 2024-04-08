@@ -134,7 +134,7 @@ class EpsilonGreedyAgent:
         self.total_points += selected_reward
         self.__updateRewards(selected_action, selected_reward)
     
-    def runSequence(self, n: int = 1000, print_interval: int = None) -> None:
+    def runSequence(self, n: int = 1000, print_interval: int = None) -> str:
         """
         Run the model input n amount of times, providing print statements to indicate how it is performing
 
@@ -152,6 +152,7 @@ class EpsilonGreedyAgent:
         print(f"FINAL Epsilon Greedy Reward Estimate: {self.__reward_estimates}")
         print(f"Total Epsilon Greedy Points: {self.total_points}")
         print("-----------------------------------------------------")
+        return f"Total Points: {self.total_points}\nReward Estimates: {self.__reward_estimates}"
 
     def reset(self) -> None:
         """
@@ -271,7 +272,7 @@ class OptimisticGreedyAgent:
         self.total_points += selected_reward
         self.__updateRewards(selected_action, selected_reward)
     
-    def runSequence(self, n: int = 1000, print_interval: int = None) -> None:
+    def runSequence(self, n: int = 1000, print_interval: int = None) -> str:
         """
         Run the model input n amount of times, providing print statements to indicate how it is performing
 
@@ -289,6 +290,7 @@ class OptimisticGreedyAgent:
         print(f"FINAL Optimistic Greedy Reward Estimate: {self.__reward_estimates}")
         print(f"Total Optimistic Greedy Points: {self.total_points}")
         print("-----------------------------------------------------")
+        return f"Total Points: {self.total_points}\nReward Estimates: {self.__reward_estimates}"
 
     def reset(self) -> None:
         """
@@ -404,7 +406,7 @@ class GreedyAgent:
         self.total_points += selected_reward
         self.__updateRewards(selected_action, selected_reward)
     
-    def runSequence(self, n: int = 1000, print_interval: int = None) -> None:
+    def runSequence(self, n: int = 1000, print_interval: int = None) -> str:
         """
         Run the model input n amount of times, providing print statements to indicate how it is performing
 
@@ -422,6 +424,7 @@ class GreedyAgent:
         print(f"FINAL Greedy Reward Estimate: {self.__reward_estimates}")
         print(f"Total Greedy Points: {self.total_points}")
         print("-----------------------------------------------------")
+        return f"Total Points: {self.total_points}\nReward Estimates: {self.__reward_estimates}"
 
     def reset(self) -> None:
         """
@@ -502,7 +505,7 @@ class RandomAgent:
         selected_reward = self.bandit.selectAction(selected_action) # Reward of selected action through bandit
         self.total_points += selected_reward
 
-    def runSequence(self, n: int = 1000) -> None:
+    def runSequence(self, n: int = 1000) -> str:
         """
         Run the model input n amount of times, providing a final print statement to indicate how it performed
 
@@ -515,6 +518,7 @@ class RandomAgent:
             self.chooseAction()
         print(f"Total Random Points: {self.total_points}")
         print("-----------------------------------------------------")
+        return f"Total Points: {self.total_points}"
     
     def reset(self) -> None:
         """
@@ -634,7 +638,7 @@ class UpperConfidenceBoundAgent:
         self.total_points += selected_reward
         self.__updateRewards(selected_action, selected_reward)
     
-    def runSequence(self, n: int = 1000, print_interval: int = None) -> None:
+    def runSequence(self, n: int = 1000, print_interval: int = None) -> str:
         """
         Run the model input n amount of times, providing print statements to indicate how it is performing
 
@@ -652,6 +656,7 @@ class UpperConfidenceBoundAgent:
         print(f"FINAL UCB Reward Estimate: {self.__reward_estimates}")
         print(f"Total UCB Points: {self.total_points}")
         print("-----------------------------------------------------")
+        return f"Total Points: {self.total_points}\nReward Estimates: {self.__reward_estimates}"
 
     def reset(self) -> None:
         """

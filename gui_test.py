@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import ttk
 import numpy as np
 
+from bandits import StationaryBandit
+from agents import EpsilonGreedyAgent, GreedyAgent, OptimisticGreedyAgent, RandomAgent, UpperConfidenceBoundAgent
+
 class Application(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -13,7 +16,7 @@ class Application(tk.Tk):
         self.k = tk.IntVar(value=1)
         self.min_val = tk.IntVar(value=0)
         self.max_val = tk.IntVar(value=1000)
-        self.n = tk.IntVar(value=1)
+        self.n = tk.IntVar(value=10)
         self.variance = tk.IntVar(value=1)
         self.epsilon = tk.DoubleVar(value=0.1)
 
@@ -21,8 +24,8 @@ class Application(tk.Tk):
         self.k_frame, self.k_slider, self.k_entry = self.create_slider_with_entry("k", 1, 25, self.k)
         self.min_frame, self.min_slider, self.min_entry = self.create_slider_with_entry("min", 0, 999, self.min_val)
         self.max_frame, self.max_slider, self.max_entry = self.create_slider_with_entry("max", 1, 1000, self.max_val)
-        self.n_frame, self.n_slider, self.n_entry = self.create_slider_with_entry("n", 1, 100000, self.n)
-        self.variance_frame, self.variance_slider, self.variance_entry = self.create_slider_with_entry("variance", 1, 250, self.variance)
+        self.n_frame, self.n_slider, self.n_entry = self.create_slider_with_entry("n", 10, 5000, self.n)
+        self.variance_frame, self.variance_slider, self.variance_entry = self.create_slider_with_entry("variance", 1, 100, self.variance)
         self.epsilon_frame, self.epsilon_slider, self.epsilon_entry = self.create_slider_with_entry("epsilon", 0.01, 1.0, self.epsilon, is_int=False)
 
         self.output_text = tk.Text(self, height=20, width=100)  # Larger text box
@@ -102,15 +105,28 @@ class Application(tk.Tk):
         variance_value = self.variance.get()
         epsilon_value = self.epsilon.get()
 
-        greedy_agent = np.random.normal(0, variance_value, size=k_value)
-        optimistic_greedy_agent = np.random.uniform(min_value, max_value, size=k_value)
-        epsilon_greedy_agent = np.random.normal(0, epsilon_value, size=k_value)
-        random_agent = np.random.uniform(min_value, max_value, size=k_value)
+        self.output_text.delete(1.0, tk.END)  # Clear previous output
+        self.output_text.insert(tk.END, "LOADING . . .")
 
-        output_text = f"Greedy Agent: {greedy_agent}\n" \
-                     f"Optimistic Greedy Agent: {optimistic_greedy_agent}\n" \
-                     f"Epsilon Greedy Agent: {epsilon_greedy_agent}\n" \
-                     f"Random Agent: {random_agent}\n"
+        curr_bandit = StationaryBandit(k_value, min_value, max_value, variance_value)
+
+        greedy = GreedyAgent(curr_bandit)
+        opt_greedy = OptimisticGreedyAgent(curr_bandit, max_value*2)
+        eps_greedy = EpsilonGreedyAgent(curr_bandit, epsilon_value)
+        random = RandomAgent(curr_bandit)
+        ucb = UpperConfidenceBoundAgent(curr_bandit)
+
+        greedy_agent = greedy.runSequence(n_value)
+        optimistic_greedy_agent = opt_greedy.runSequence(n_value)
+        epsilon_greedy_agent = eps_greedy.runSequence(n_value)
+        random_agent = random.runSequence(n_value)
+        ucb_agent = ucb.runSequence(n_value)      
+
+        output_text = f"Greedy Agent:\n {greedy_agent}\n\n" \
+                     f"Optimistic Greedy Agent:\n {optimistic_greedy_agent}\n\n" \
+                     f"Epsilon Greedy Agent:\n {epsilon_greedy_agent}\n\n" \
+                     f"Upper Confidence Bound Agent:\n {ucb_agent}\n\n" \
+                     f"Random Agent:\n {random_agent}"
 
         self.output_text.delete(1.0, tk.END)  # Clear previous output
         self.output_text.insert(tk.END, output_text)
