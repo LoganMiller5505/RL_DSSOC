@@ -19,6 +19,7 @@ class Application(tk.Tk):
         self.n = tk.IntVar(value=10)
         self.variance = tk.IntVar(value=1)
         self.epsilon = tk.DoubleVar(value=0.1)
+        self.c = tk.DoubleVar(value = 0.1)
 
         # UI Elements
         self.k_frame, self.k_slider, self.k_entry = self.create_slider_with_entry("k", 1, 25, self.k)
@@ -27,6 +28,7 @@ class Application(tk.Tk):
         self.n_frame, self.n_slider, self.n_entry = self.create_slider_with_entry("n", 10, 5000, self.n)
         self.variance_frame, self.variance_slider, self.variance_entry = self.create_slider_with_entry("variance", 1, 100, self.variance)
         self.epsilon_frame, self.epsilon_slider, self.epsilon_entry = self.create_slider_with_entry("epsilon", 0.01, 1.0, self.epsilon, is_int=False)
+        self.c_frame, self.c_slider, self.c_entry = self.create_slider_with_entry("c", 0.01, 1.0, self.c, is_int=False)
 
         self.output_text = tk.Text(self, height=20, width=100)  # Larger text box
         self.output_text.pack(pady=10)
@@ -38,6 +40,7 @@ class Application(tk.Tk):
         self.n_slider.bind("<ButtonRelease-1>", self.generate_output)
         self.variance_slider.bind("<ButtonRelease-1>", self.generate_output)
         self.epsilon_slider.bind("<ButtonRelease-1>", self.generate_output)
+        self.c_slider.bind("<ButtonRelease-1>", self.generate_output)
 
     def create_slider_with_entry(self, label, min_val, max_val, var, is_int=True):
         frame = ttk.Frame(self)
@@ -104,6 +107,7 @@ class Application(tk.Tk):
         n_value = self.n.get()
         variance_value = self.variance.get()
         epsilon_value = self.epsilon.get()
+        c_value = self.c.get()
 
         self.output_text.delete(1.0, tk.END)  # Clear previous output
         self.output_text.insert(tk.END, "LOADING . . .")
@@ -120,7 +124,7 @@ class Application(tk.Tk):
         optimistic_greedy_agent = opt_greedy.runSequence(n_value)
         epsilon_greedy_agent = eps_greedy.runSequence(n_value)
         random_agent = random.runSequence(n_value)
-        ucb_agent = ucb.runSequence(n_value)      
+        ucb_agent = ucb.runSequence(n_value, c_value)      
 
         output_text = f"Greedy Agent:\n {greedy_agent}\n\n" \
                      f"Optimistic Greedy Agent:\n {optimistic_greedy_agent}\n\n" \
